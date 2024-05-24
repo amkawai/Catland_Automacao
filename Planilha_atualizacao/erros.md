@@ -1,0 +1,165 @@
+
+#Erros identificados
+
+
+
+Início:
+
+
+
+2024-05-20 19:44:24
+
+
+
+
+
+
+
+
+---
+
+
+
+
+###Nome e id não batem com planilha:
+
+ Atualização
+
+Nome: Maltesa
+
+Cód. Simplesvet: 9073
+
+Gênero: Macho
+
+Novo nome: Maltês
+
+
+
+
+
+
+
+---
+
+
+
+
+###Nome e id não batem com planilha:
+
+ Atualização
+
+Nome: Outro exemplo
+
+Cód. Simplesvet: 942
+
+Status: disponível
+
+
+
+
+
+
+
+---
+
+
+
+
+###Nome e id não batem com planilha:
+
+ Atualização
+
+Nome: Abel Neto
+
+Cód. Simplesvet: 2671
+
+Local: Hospital Externo
+
+Status: Estrelinha 
+
+Observação saúde: data do óbito: 11/05/2024 Motivo: complicações das alterações neurológicas
+
+Novo nome: Abel novo nome
+
+Devolução: 25/04/2024
+
+Motivo: ex-responsável informou que o tempo que precisaria demandar para que felino fizesse as necessidades na caixa de areia era incompatível com o tempo que ela tinha disponível
+
+Entrada ONG: 26/04/2024
+
+Saída ONG: 27/04/2024
+
+Carteirinha de Vacinação: Sim
+
+Data nasc.: 28/04/2024
+
+Gênero: Macho
+
+Raça: SRD
+
+Cor: Preto
+
+Castração: 29/04/2024
+
+FIV: Negativo
+
+FELV: Negativo
+
+Data Teste FIV e FELV: 30/04/2024
+
+Data 2ª Dose Vacina: 01/05/2024
+
+Tipo de Vacina: V3
+
+Renovação Vacina: 02/05/2024
+
+Raiva: 03/05/2024
+
+Renovação Raiva: 04/05/2024
+
+História: A mãe foi encontrada prenha, em uma praça. Pouco depois de ser resgatada deu cria a seis filhotes.
+
+Família: Abel Neto, Tino Marcos, Patricia Poeta, Pedro Bial, Caco Barcelos, Baltazar, Sônia Bridi e Alex Escobar
+
+Observação: Obs na coluna Z
+
+Microchip: Não
+
+Interações com outros animais: Não
+
+Interação com Humanos: N/A
+
+Perfil: Assustado
+
+
+
+
+
+
+
+
+
+
+
+---
+
+
+
+### Resultados
+
+
+
+-Alterações realizadas: 6.
+
+
+
+-Alterações com problemas: 3.
+
+
+
+Terminado: 
+
+
+
+2024-05-20 19:45:08
+
