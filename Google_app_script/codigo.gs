@@ -215,7 +215,8 @@ function processMessage(message) {
   var interactionHumansPattern = new RegExp('Interação com Humanos:\\s*(' + validBoolList.join('|') + ')');
   var profilePattern = new RegExp('Perfil:\\s*(' + validProfileList.join('|') + ')');
   var reasonReturnedPattern = new RegExp('Motivo:\\s*([^]+?)' + lookahead);
-
+  var healthNotesPattern = new RegExp('Obs\\. Saúde:\\s*([^]+?)' + lookahead);
+  var adminNotesPattern = new RegExp('Obs\\. Administrativo:\\s*([^]+?)' + lookahead);
   
   var nomeMatch = message.match(nomePattern);
   var codigoMatch = message.match(codigoPattern);
@@ -237,6 +238,8 @@ function processMessage(message) {
   var interactionHumansMatch = message.match(interactionHumansPattern);
   var profileMatch = message.match(profilePattern);
   var reasonReturnedMatch = message.match(reasonReturnedPattern);
+  var healthNotesMatch = message.match(healthNotesPattern);
+  var adminNotesMatch = message.match(adminNotesPattern);
   
   if (!nomeMatch || !codigoMatch) {
     logToSheet('Nome e/ou Cód Simplesvet não encontrados: nome: ' + nomeMatch[1] + ", codigo: " + codigoMatch[1], message, true);
@@ -384,7 +387,33 @@ function processMessage(message) {
         updateField(
                       parameterMatch = profileMatch, message = message, listValidOptions = validProfileList, rowNumber = i, columnNumber = colNumDict["profile"],
                       errorLogText = "Perfil inválido", successLogText = "Perfil atualizado na linha", sheet = sheet
+                      )                
+      }
+
+      if (reasonReturnedMatch) {
+        updateField(
+                      parameterMatch = reasonReturnedMatch, message = message, listValidOptions = [], rowNumber = i, columnNumber = colNumDict["returnedReason"],
+                      errorLogText = "Motivo inválido", successLogText = "Motivo atualizado na linha", sheet = sheet
                       )
+        returnedStatusMatch = ["Sim","Sim"];      // weird, I know. This way to simulate other match variables
+        updateField(
+                      parameterMatch = returnedStatusMatch, message = message, listValidOptions = [], rowNumber = i, columnNumber = colNumDict["returnedStatus"],
+                      errorLogText = "Devolução inválida", successLogText = "Devolução atualizada na linha", sheet = sheet
+                      )         
+      }
+
+      if (healthNotesMatch) {
+        updateField(
+                      parameterMatch = healthNotesMatch, message = message, listValidOptions = [], rowNumber = i, columnNumber = colNumDict["healthNotes"],
+                      errorLogText = "Obs Saúde inválido", successLogText = "Obs Saúde atualizado na linha", sheet = sheet
+                      )                
+      }
+
+      if (adminNotesMatch) {
+        updateField(
+                      parameterMatch = adminNotesMatch, message = message, listValidOptions = [], rowNumber = i, columnNumber = colNumDict["adminNotes"],
+                      errorLogText = "Perfil inválido", successLogText = "Perfil atualizado na linha", sheet = sheet
+                      )                
       }
 
       logToSheet('Atualização concluída', message, false);
