@@ -217,6 +217,13 @@ function processMessage(message) {
   var reasonReturnedPattern = new RegExp('Motivo:\\s*([^]+?)' + lookahead);
   var healthNotesPattern = new RegExp('Obs\\. Saúde:\\s*([^]+?)' + lookahead);
   var adminNotesPattern = new RegExp('Obs\\. Administrativo:\\s*([^]+?)' + lookahead);
+  var entryONGPattern = new RegExp('Entrada ONG:\\s*(\\d{1,2}/\\d{1,2}/(\\d{2}|\\d{4}))' + lookahead);
+  var exitNGOPattern = new RegExp('Saída ONG:\\s*(\\d{1,2}/\\d{1,2}/(\\d{2}|\\d{4}))' + lookahead);
+  var birthdatePattern = new RegExp('Data nasc\\.:\\s*(\\d{1,2}/\\d{1,2}/(\\d{2}|\\d{4}))' + lookahead);
+  var fivFelvTestDatePattern = new RegExp('Data Teste FIV e FELV:\\s*(\\d{1,2}/\\d{1,2}/(\\d{2}|\\d{4}))' + lookahead);
+  var date2ndDoseVaccinePattern = new RegExp('Data 2ª Dose Vacina:\\s*(\\d{1,2}/\\d{1,2}/(\\d{2}|\\d{4}))' + lookahead);
+  var rabiesDatePattern = new RegExp('Raiva:\\s*(\\d{1,2}/\\d{1,2}/(\\d{2}|\\d{4}))' + lookahead);
+  var returnedDatePattern = new RegExp('Devolução:\\s*(\\d{1,2}/\\d{1,2}/(\\d{2}|\\d{4}))' + lookahead);
   
   var nomeMatch = message.match(nomePattern);
   var codigoMatch = message.match(codigoPattern);
@@ -240,6 +247,14 @@ function processMessage(message) {
   var reasonReturnedMatch = message.match(reasonReturnedPattern);
   var healthNotesMatch = message.match(healthNotesPattern);
   var adminNotesMatch = message.match(adminNotesPattern);
+  var entryONGMatch = message.match(entryONGPattern);
+  var exitNGOMatch = message.match(exitNGOPattern);
+  var birthdateMatch = message.match(birthdatePattern);
+  var fivFelvTestDateMatch = message.match(fivFelvTestDatePattern);
+  var date2ndDoseVaccineMatch = message.match(date2ndDoseVaccinePattern);
+  var rabiesDateMatch = message.match(rabiesDatePattern);
+  var returnedDateMatch = message.match(returnedDatePattern);
+
   
   if (!nomeMatch || !codigoMatch) {
     logToSheet('Nome e/ou Cód Simplesvet não encontrados: nome: ' + nomeMatch[1] + ", codigo: " + codigoMatch[1], message, true);
@@ -287,6 +302,34 @@ function processMessage(message) {
         
       }
 
+      if (entryONGMatch) {
+        updateField(
+                      parameterMatch = entryONGMatch, message = message, listValidOptions = [], rowNumber = i, columnNumber = colNumDict["entryNGO"],
+                      errorLogText = "Entrada ONG inválido", successLogText = "Entrada ONG atualizado na linha", sheet = sheet
+                      )                
+      }
+      
+      if (exitNGOMatch) {
+        updateField(
+                      parameterMatch = exitNGOMatch, message = message, listValidOptions = [], rowNumber = i, columnNumber = colNumDict["exitNGO"],
+                      errorLogText = "Saída ONG inválido", successLogText = "Saída ONG atualizado na linha", sheet = sheet
+                      )                
+      }
+      
+      if (vaccinationMatch) {
+        updateField(
+                      parameterMatch = vaccinationMatch, message = message, listValidOptions = validBoolList, rowNumber = i, columnNumber = colNumDict["vaccinationCard"],
+                      errorLogText = "Vacinação inválida", successLogText = "Vacinação atualizada na linha", sheet = sheet
+                      )
+      }
+
+      if (birthdateMatch) {
+        updateField(
+                      parameterMatch = birthdateMatch, message = message, listValidOptions = [], rowNumber = i, columnNumber = colNumDict["birthdate"],
+                      errorLogText = "Data Nascimento inválida", successLogText = "Data Nascimento atualizada na linha", sheet = sheet
+                      )                
+      }
+
       if (sexMatch) {
         updateField(
                       parameterMatch = sexMatch, message = message, listValidOptions = validSexes, rowNumber = i, columnNumber = colNumDict["sex"],
@@ -307,13 +350,6 @@ function processMessage(message) {
                       errorLogText = "Cor inválida", successLogText = "Cor atualizada na linha", sheet = sheet
                       )
         
-      }
-
-      if (vaccinationMatch) {
-        updateField(
-                      parameterMatch = vaccinationMatch, message = message, listValidOptions = validBoolList, rowNumber = i, columnNumber = colNumDict["vaccinationCard"],
-                      errorLogText = "Vacinação inválida", successLogText = "Vacinação atualizada na linha", sheet = sheet
-                      )
       }
 
       if (novoNomeMatch) {
@@ -337,10 +373,31 @@ function processMessage(message) {
                       )
       }
 
+      if (fivFelvTestDateMatch) {
+        updateField(
+                      parameterMatch = fivFelvTestDateMatch, message = message, listValidOptions = [], rowNumber = i, columnNumber = colNumDict["fivFelvTestDate"],
+                      errorLogText = "Data FIV FELV inválido", successLogText = "Data FIV FELV atualizado na linha", sheet = sheet
+                      )
+      }
+
+      if (date2ndDoseVaccineMatch) {
+        updateField(
+                      parameterMatch = date2ndDoseVaccineMatch, message = message, listValidOptions = [], rowNumber = i, columnNumber = colNumDict["vaccine2ndDoseDate"],
+                      errorLogText = "Data 2a dose inválido", successLogText = "Data 2a dose atualizado na linha", sheet = sheet
+                      )
+      }
+
       if (vaccineTypeMatch) {
         updateField(
                       parameterMatch = vaccineTypeMatch, message = message, listValidOptions = validVaccineList, rowNumber = i, columnNumber = colNumDict["vaccinationType"],
                       errorLogText = "Tipo de Vacina inválido", successLogText = "Tipo de Vacina atualizado na linha", sheet = sheet
+                      )
+      }
+      
+      if (rabiesDateMatch) {
+        updateField(
+                      parameterMatch = rabiesDateMatch, message = message, listValidOptions = [], rowNumber = i, columnNumber = colNumDict["rabiesDate"],
+                      errorLogText = "Data Raiva inválido", successLogText = "Data Raiva atualizado na linha", sheet = sheet
                       )
       }
 
@@ -390,12 +447,24 @@ function processMessage(message) {
                       )                
       }
 
+    if (returnedDateMatch) {
+        updateField(
+                      parameterMatch = returnedDateMatch, message = message, listValidOptions = [], rowNumber = i, columnNumber = colNumDict["returnedDate"],
+                      errorLogText = "Devolução inválido", successLogText = "Devolução - data atualizado na linha", sheet = sheet
+                      )
+        returnedStatusMatch = ["Sim","Sim"];      // weird, I know. This way to simulate other match variables
+        updateField(
+                      parameterMatch = returnedStatusMatch, message = message, listValidOptions = [], rowNumber = i, columnNumber = colNumDict["returnedStatus"],
+                      errorLogText = "Devolução inválida", successLogText = "Devolução atualizada na linha", sheet = sheet
+                      )         
+      }
+
       if (reasonReturnedMatch) {
         updateField(
                       parameterMatch = reasonReturnedMatch, message = message, listValidOptions = [], rowNumber = i, columnNumber = colNumDict["returnedReason"],
                       errorLogText = "Motivo inválido", successLogText = "Motivo atualizado na linha", sheet = sheet
                       )
-        returnedStatusMatch = ["Sim","Sim"];      // weird, I know. This way to simulate other match variables
+        returnedStatusMatch = ["Sim","Sim"];      // weirder, I know. Repeated? Yes, to ensure it works if only one appears.
         updateField(
                       parameterMatch = returnedStatusMatch, message = message, listValidOptions = [], rowNumber = i, columnNumber = colNumDict["returnedStatus"],
                       errorLogText = "Devolução inválida", successLogText = "Devolução atualizada na linha", sheet = sheet
