@@ -18,16 +18,16 @@ function atualizaData() {
 
 //Automação de Preenchimento
 // Variáveis de ambiente
-var main_worksheet = "Planilha Geral";
-var title_menu = 'Preenchimento Miautomático de Miautualizações';
-var text_insert_messages = 'Inserir Mensagens';
-var instructions_text_messages = ['Copie a mensagem de Atualização do Whatsapp e cole aqui', 'Somente atualizações de Local, Status, Gênero, Raça e Cor estão disponíveis. Deixe em branco e aperte OK quando finalizar'];
+var mainWorksheet = "Planilha Geral";
+var titleMenu = 'Preenchimento Miautomático de Miautualizações';
+var textInsertMessages = 'Inserir Mensagens';
+var instructionsTextMessages = ['Copie a mensagem de Atualização do Whatsapp e cole aqui', 'Somente atualizações de Local, Status, Gênero, Raça e Cor estão disponíveis. Deixe em branco e aperte OK quando finalizar'];
 
 // Informações de Log
-var log_worksheet_title = "Logs";
-var log_cols = ['Data e Hora', 'Log', 'Mensagem Original'];
-var log_error_text_color = '#f652a0'; // meio avermelhado
-var log_regular_text_color ='#4c5270' // azul escuro
+var logWorksheetTitle = "Logs";
+var logCols = ['Data e Hora', 'Log', 'Mensagem Original'];
+var logErrorTextColor = '#f652a0'; // meio avermelhado
+var logRegularTextColor ='#4c5270' // azul escuro
 
 // Validações de Parâmetros
 var validLocations = ["Cafofinho", "Hospital Externo", "Petz", "Protetor Parceiro", "Quarentena Externa", "Sede", "Pendente", "Ronron Cat Café"];
@@ -46,49 +46,49 @@ var validColors = ["Amarelo e Branco", "Amarelo", "Bege e Branco", "Bege e Cinza
                             "Preto, Amarelo e Branco", "Preto, Branco e Marrom", "Preto, Marrom e Bege", "Preto", "Red Point", "Siamês Siberiano",
                             "Siberiano", "Tigrado e Branco", "Tigrado e Cinza", "Tigrado e Tricolor", "Tigrado", "Tricolor e Tigrado", "Tricolor",
                             "Pendente", "N/A"];
-var valid_bool_list = ["Sim", "Não", "Pendente", "N/A"];
-var valid_fiv_felv_list =["Positivo", "Negativo", "Pendente", "N/A"];
-var valid_vaccine_list = ["V3", "V4", "V5", "Pendente", "N/A"];
-var valid_profile_list = ["Arisco","Assustado", "Brincalhão", "Carinhoso", "Dócil", "Dorminhoco", "Neutro", "Temperamental", "Tímido",
+var validBoolList = ["Sim", "Não", "Pendente", "N/A"];
+var validFivFelvList =["Positivo", "Negativo", "Pendente", "N/A"];
+var validVaccineList = ["V3", "V4", "V5", "Pendente", "N/A"];
+var validProfileList = ["Arisco","Assustado", "Brincalhão", "Carinhoso", "Dócil", "Dorminhoco", "Neutro", "Temperamental", "Tímido",
                         "Tranquilo", "Pendente","N/A"];
-var valid_returned_list = ["Sim", "Não", "N/A"];
+var validReturnedList = ["Sim", "Não", "N/A"];
 
-var col_num_dict ={
+var colNumDict ={
                     "location": 1,
                     "status": 2,
-                    "azure_code": 3,            // deprecated
+                    "azureCode": 3,            // deprecated
                     "code": 4,
                     "name": 5,
-                    "entry NGO": 6,
-                    "exit NGO": 7,
-                    "time_span_at_NGO": 8,      // not used in any formula, this is calculated directly on the spreadsheet
-                    "vaccination_card": 9,
+                    "entryNGO": 6,
+                    "exitNGO": 7,
+                    "timeSpanAtNGO": 8,      // not used in any formula, this is calculated directly on the spreadsheet
+                    "vaccinationCard": 9,
                     "birthdate": 10,
                     "age": 11,                  // not used in any formula, this is calculated directly on the spreadsheet
                     "sex": 12,
                     "race": 13,
                     "color": 14,
-                    "neuter_date": 15,
+                    "neuterDate": 15,
                     "fiv": 16,
                     "felv": 17,
-                    "fiv_felv_test_date": 18,
-                    "vaccine_2nd_dose_date": 19,
+                    "fivFelvTestDate": 18,
+                    "vaccine2ndDoseDate": 19,
                     "vaccinationType": 20,
-                    "vaccine_renewal_status": 21,
-                    "rabies_date": 22,
-                    "rabies_renewal_status": 23,
+                    "vaccineRenewalStatus": 21,
+                    "rabiesDate": 22,
+                    "rabiesRenewalStatus": 23,
                     "lifeStory": 24,
                     "family": 25,
                     "notes": 26,
                     "microchip": 27,
-                    "interaction_animals": 28,
-                    "interaction_humans": 29,
+                    "interactionAnimals": 28,
+                    "interactionHumans": 29,
                     "profile": 30,
-                    "returned_status": 31,
-                    "returned_date": 32,
-                    "returned_reason": 33,
-                    "health_notes": 34,
-                    "admin_notes": 35
+                    "returnedStatus": 31,
+                    "returnedDate": 32,
+                    "returnedReason": 33,
+                    "healthNotes": 34,
+                    "adminNotes": 35
 }
 
 // Global array to store messages
@@ -103,8 +103,8 @@ var messages = [];
 
 function onOpen() {
   var ui = SpreadsheetApp.getUi();
-  ui.createMenu(title_menu)
-    .addItem(text_insert_messages, 'showPrompt')
+  ui.createMenu(titleMenu)
+    .addItem(textInsertMessages, 'showPrompt')
     .addToUi();
 }
 
@@ -115,8 +115,8 @@ function onOpen() {
 function showPrompt() {
   var ui = SpreadsheetApp.getUi();
   var result = ui.prompt(
-    instructions_text_messages[0],
-    instructions_text_messages[1],
+    instructionsTextMessages[0],
+    instructionsTextMessages[1],
     ui.ButtonSet.OK_CANCEL
   );
 
@@ -145,12 +145,12 @@ function showPrompt() {
  */
 function logToSheet(logMessage = "Sem mensagem de Log", originalMessage = "Sem mensagem disponível", isError = false) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var logSheet = ss.getSheetByName(log_worksheet_title);
+  var logSheet = ss.getSheetByName(logWorksheetTitle);
   
   if (!logSheet) {
     // Create the Logs sheet if it doesn't exist
-    logSheet = ss.insertSheet(log_worksheet_title);
-    logSheet.appendRow(log_cols);
+    logSheet = ss.insertSheet(logWorksheetTitle);
+    logSheet.appendRow(logCols);
   }
 
   // Append the log message with a timestamp and the original message
@@ -160,10 +160,10 @@ function logToSheet(logMessage = "Sem mensagem de Log", originalMessage = "Sem m
   // Apply highlight text color if it is an error log
   var lastRow = logSheet.getLastRow();
   if (isError) {
-    logSheet.getRange(lastRow, 1, 1, logSheet.getLastColumn()).setFontColor(log_error_text_color);
+    logSheet.getRange(lastRow, 1, 1, logSheet.getLastColumn()).setFontColor(logErrorTextColor);
   }
   else {
-    logSheet.getRange(lastRow, 1, 1, logSheet.getLastColumn()).setFontColor(log_regular_text_color);
+    logSheet.getRange(lastRow, 1, 1, logSheet.getLastColumn()).setFontColor(logRegularTextColor);
   }
 }
 
@@ -178,7 +178,7 @@ function processMessages() {
   messages = [];
   // Switch to Logs sheet
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var logSheet = ss.getSheetByName(log_worksheet_title);
+  var logSheet = ss.getSheetByName(logWorksheetTitle);
   if (logSheet) {
     ss.setActiveSheet(logSheet);
   }
@@ -191,7 +191,7 @@ function processMessages() {
  */
 function processMessage(message) {
   // Define a common positive lookahead assertion for properties
-  var lookahead = '(?=\\sLocal|\\sStatus|\\sCód\\.\\sSimplesvet|\\sNome|\\sNovo\\sNome|\\sEntrada\\sONG|\\sSaída\\sONG|\\sCarteirinha\\sde\\sVacinação|\\sData nasc\\.|\\sGênero|\\sRaça|\\sCor|\\sCastração|\\sFIV|\\sFELV|\\sData\\sTeste\\sFIV\\se\\sFELV|\\sData\\s2ª\\sDose\\sVacina|\\sTipo\\sde\\sVacina|\\sRenovação\\sVacina|\\sRenovação\\s\\sVacina|\\sRaiva|\\sRenovação\\sRaiva|\\sHistória|\\sFamília|\\sObservação|\\sMicrochip|\\sInterações\\scom\\soutros\\sanimais|\\sInteração\\scom\\sHumanos|\\sPerfil|\\sDevolvido|\\sData\\sda\\sDevolução|\\sMotivo\\sda\\sDevolução|\\sObs\\.\\sSaúde|\\sObs\\.\\sAdministrativo|\\s\\w+:|$)';
+  var lookahead = '(?=\\sLocal|\\sStatus|\\sCód\\.\\sSimplesvet|\\sNome|\\sNovo\\sNome|\\sEntrada\\sONG|\\sSaída\\sONG|\\sCarteirinha\\sde\\sVacinação|\\sData nasc\\.|\\sGênero|\\sRaça|\\sCor|\\sCastração|\\sFIV|\\sFELV|\\sData\\sTeste\\sFIV\\se\\sFELV|\\sData\\s2ª\\sDose\\sVacina|\\sTipo\\sde\\sVacina|\\sRenovação\\sVacina|\\sRenovação\\s\\sVacina|\\sRaiva|\\sRenovação\\sRaiva|\\sHistória|\\sFamília|\\sObservação|\\sMicrochip|\\sInterações\\scom\\soutros\\sanimais|\\sInteração\\scom\\sHumanos|\\sPerfil|\\sDevolvido|\\sDevolução|\\sData\\sda\\sDevolução|\\sMotivo\\sda\\sDevolução|\\sMotivo|\\sObs\\.\\sSaúde|\\sObs\\.\\sAdministrativo|\\s\\w+:|$)';
   
   // Define property patterns with the common positive lookahead assertion
   //var nomePattern = new RegExp('Nome:\\s*([^]+?)(?=\\s(?:Novo\\sNome:|Local:|Raça:|Cor:|Cód\\.\\sSimplesvet:|Sexo?:|Status:|$))');
@@ -202,13 +202,19 @@ function processMessage(message) {
   var racePattern = new RegExp('Raça:\\s*(' + validRaces.join('|') + ')');
   var colorPattern = new RegExp('Cor:\\s*(' + validColors.join('|') + ')');
   var sexPattern = new RegExp('Gênero:\\s*(' + validSexes.join('|') + ')');
-  var vaccinationPattern = new RegExp('Carteirinha de Vacinação:\\s*(' + valid_bool_list.join('|') + ')');
+  var vaccinationPattern = new RegExp('Carteirinha de Vacinação:\\s*(' + validBoolList.join('|') + ')');
   var novoNomePattern = new RegExp('Novo nome:\\s*([^]+?)' + lookahead);
-  var fivPattern = new RegExp('FIV:\\s*(' + valid_fiv_felv_list.join('|') + ')');
-  var felvPattern = new RegExp('FELV:\\s*(' + valid_fiv_felv_list.join('|') + ')');
-  var vaccineTypePattern = new RegExp('Tipo de Vacina:\\s*(' + valid_vaccine_list.join('|') + ')');
+  var fivPattern = new RegExp('FIV:\\s*(' + validFivFelvList.join('|') + ')');
+  var felvPattern = new RegExp('FELV:\\s*(' + validFivFelvList.join('|') + ')');
+  var vaccineTypePattern = new RegExp('Tipo de Vacina:\\s*(' + validVaccineList.join('|') + ')');
   var lifeStoryPattern = new RegExp('História:\\s*([^]+?)' + lookahead);
   var familyPattern = new RegExp('Família:\\s*([^]+?)' + lookahead);
+  var notesPattern = new RegExp('Observação:\\s*([^]+?)' + lookahead);
+  var microchipPattern = new RegExp('Microchip:\\s*([^]+?)' + lookahead);
+  var interactionAnimalsPattern = new RegExp('Interações com outros animais:\\s*(' + validBoolList.join('|') + ')');
+  var interactionHumansPattern = new RegExp('Interação com Humanos:\\s*(' + validBoolList.join('|') + ')');
+  var profilePattern = new RegExp('Perfil:\\s*(' + validProfileList.join('|') + ')');
+  var reasonReturnedPattern = new RegExp('Motivo:\\s*([^]+?)' + lookahead);
 
   
   var nomeMatch = message.match(nomePattern);
@@ -225,6 +231,12 @@ function processMessage(message) {
   var vaccineTypeMatch = message.match(vaccineTypePattern);
   var lifeStoryMatch = message.match(lifeStoryPattern);
   var familyMatch = message.match(familyPattern);
+  var notesMatch = message.match(notesPattern);
+  var microchipMatch = message.match(microchipPattern);
+  var interactionAnimalsMatch = message.match(interactionAnimalsPattern);
+  var interactionHumansMatch = message.match(interactionHumansPattern);
+  var profileMatch = message.match(profilePattern);
+  var reasonReturnedMatch = message.match(reasonReturnedPattern);
   
   if (!nomeMatch || !codigoMatch) {
     logToSheet('Nome e/ou Cód Simplesvet não encontrados: nome: ' + nomeMatch[1] + ", codigo: " + codigoMatch[1], message, true);
@@ -238,111 +250,142 @@ function processMessage(message) {
 
   // Access the "Planilha Geral" sheet
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = ss.getSheetByName(main_worksheet);
+  var sheet = ss.getSheetByName(mainWorksheet);
   if (!sheet) {
-    logToSheet('Planilha não encontrada: '+ main_worksheet, message, true);
-    Logger.log('Planilha não encontrada: '+ main_worksheet + message);
+    logToSheet('Planilha não encontrada: '+ mainWorksheet, message, true);
+    Logger.log('Planilha não encontrada: '+ mainWorksheet + message);
     return;
   }
 
   var data = sheet.getDataRange().getValues();
   // Find the row with the matching code in column D
   for (var i = 0; i < data.length; i++) {
-    if (data[i][col_num_dict["code"]-1] == codigo) {    //indices start from 0 in getDataRange(), but not in getRange()!
+    if (data[i][colNumDict["code"]-1] == codigo) {    //indices start from 0 in getDataRange(), but not in getRange()!
       //Check if name is correct
-      if (data[i][col_num_dict["name"]-1] != nome){
-        logToSheet('Nome na mensagem não bate com nome na planilha. Atualização: ' + nome + ", Mensagem: " + data[i][col_num_dict["name"]-1], message, true);
-        Logger.log('Nome na mensagem não bate com nome na planilha. Atualização: ' + nome + ", Mensagem: " + data[i][col_num_dict["name"]-1] + " : " + message);
+      if (data[i][colNumDict["name"]-1] != nome){
+        logToSheet('Nome na mensagem não bate com nome na planilha. Atualização: ' + nome + ", Mensagem: " + data[i][colNumDict["name"]-1], message, true);
+        Logger.log('Nome na mensagem não bate com nome na planilha. Atualização: ' + nome + ", Mensagem: " + data[i][colNumDict["name"]-1] + " : " + message);
         return;
       }
       
       if (locationMatch) {
-        update_field(
-                      parameterMatch = locationMatch, message = message, list_valid_options = validLocations, row_number = i, column_number = col_num_dict["location"],
-                      error_log_text = "Local inválido", success_log_text = "Local atualizado na linha", sheet = sheet
+        updateField(
+                      parameterMatch = locationMatch, message = message, listValidOptions = validLocations, rowNumber = i, columnNumber = colNumDict["location"],
+                      errorLogText = "Local inválido", successLogText = "Local atualizado na linha", sheet = sheet
                       )
         
       }
 
       if (statusMatch){
-        update_field(
-                      parameterMatch = statusMatch, message = message, list_valid_options = validStatuses, row_number = i, column_number = col_num_dict["status"],
-                      error_log_text = "Status inválido", success_log_text = "Status atualizado na linha", sheet = sheet
+        updateField(
+                      parameterMatch = statusMatch, message = message, listValidOptions = validStatuses, rowNumber = i, columnNumber = colNumDict["status"],
+                      errorLogText = "Status inválido", successLogText = "Status atualizado na linha", sheet = sheet
                       )
         
       }
 
       if (sexMatch) {
-        update_field(
-                      parameterMatch = sexMatch, message = message, list_valid_options = validSexes, row_number = i, column_number = col_num_dict["sex"],
-                      error_log_text = "Gênero inválido", success_log_text = "Gênero atualizado na linha", sheet = sheet
+        updateField(
+                      parameterMatch = sexMatch, message = message, listValidOptions = validSexes, rowNumber = i, columnNumber = colNumDict["sex"],
+                      errorLogText = "Gênero inválido", successLogText = "Gênero atualizado na linha", sheet = sheet
                       )
         
       }
       if (raceMatch) {
-        update_field(
-                      parameterMatch = raceMatch, message = message, list_valid_options = validRaces, row_number = i, column_number = col_num_dict["race"],
-                      error_log_text = "Raça inválida", success_log_text = "Raça atualizada na linha", sheet = sheet
+        updateField(
+                      parameterMatch = raceMatch, message = message, listValidOptions = validRaces, rowNumber = i, columnNumber = colNumDict["race"],
+                      errorLogText = "Raça inválida", successLogText = "Raça atualizada na linha", sheet = sheet
                       )
 
       }
       if (colorMatch) {
-        update_field(
-                      parameterMatch = colorMatch, message = message, list_valid_options = validColors, row_number = i, column_number = col_num_dict["color"],
-                      error_log_text = "Cor inválida", success_log_text = "Cor atualizada na linha", sheet = sheet
+        updateField(
+                      parameterMatch = colorMatch, message = message, listValidOptions = validColors, rowNumber = i, columnNumber = colNumDict["color"],
+                      errorLogText = "Cor inválida", successLogText = "Cor atualizada na linha", sheet = sheet
                       )
         
       }
 
       if (vaccinationMatch) {
-        update_field(
-                      parameterMatch = vaccinationMatch, message = message, list_valid_options = valid_bool_list, row_number = i, column_number = col_num_dict["vaccination_card"],
-                      error_log_text = "Vacinação inválida", success_log_text = "Vacinação atualizada na linha", sheet = sheet
+        updateField(
+                      parameterMatch = vaccinationMatch, message = message, listValidOptions = validBoolList, rowNumber = i, columnNumber = colNumDict["vaccinationCard"],
+                      errorLogText = "Vacinação inválida", successLogText = "Vacinação atualizada na linha", sheet = sheet
                       )
       }
 
       if (novoNomeMatch) {
-        update_field(
-                      parameterMatch = novoNomeMatch, message = message, list_valid_options = [], row_number = i, column_number = col_num_dict["name"],
-                      error_log_text = "Novo nome inválido", success_log_text = "Nome atualizado na linha", sheet = sheet
+        updateField(
+                      parameterMatch = novoNomeMatch, message = message, listValidOptions = [], rowNumber = i, columnNumber = colNumDict["name"],
+                      errorLogText = "Novo nome inválido", successLogText = "Nome atualizado na linha", sheet = sheet
                       )
       }
 
       if (fivMatch) {
-        update_field(
-                      parameterMatch = fivMatch, message = message, list_valid_options = valid_fiv_felv_list, row_number = i, column_number = col_num_dict["fiv"],
-                      error_log_text = "FIV inválido", success_log_text = "FIV atualizado na linha", sheet = sheet
+        updateField(
+                      parameterMatch = fivMatch, message = message, listValidOptions = validFivFelvList, rowNumber = i, columnNumber = colNumDict["fiv"],
+                      errorLogText = "FIV inválido", successLogText = "FIV atualizado na linha", sheet = sheet
                       )
       }
 
       if (felvMatch) {
-        update_field(
-                      parameterMatch = felvMatch, message = message, list_valid_options = valid_fiv_felv_list, row_number = i, column_number = col_num_dict["felv"],
-                      error_log_text = "FELV inválido", success_log_text = "FELV atualizado na linha", sheet = sheet
+        updateField(
+                      parameterMatch = felvMatch, message = message, listValidOptions = validFivFelvList, rowNumber = i, columnNumber = colNumDict["felv"],
+                      errorLogText = "FELV inválido", successLogText = "FELV atualizado na linha", sheet = sheet
                       )
       }
 
       if (vaccineTypeMatch) {
-        update_field(
-                      parameterMatch = vaccineTypeMatch, message = message, list_valid_options = valid_vaccine_list, row_number = i, column_number = col_num_dict["vaccinationType"],
-                      error_log_text = "Tipo de Vacina inválido", success_log_text = "Tipo de Vacina atualizado na linha", sheet = sheet
+        updateField(
+                      parameterMatch = vaccineTypeMatch, message = message, listValidOptions = validVaccineList, rowNumber = i, columnNumber = colNumDict["vaccinationType"],
+                      errorLogText = "Tipo de Vacina inválido", successLogText = "Tipo de Vacina atualizado na linha", sheet = sheet
                       )
       }
 
       if (lifeStoryMatch) {
-        update_field(
-                      parameterMatch = lifeStoryMatch, message = message, list_valid_options = [], row_number = i, column_number = col_num_dict["lifeStory"],
-                      error_log_text = "História inválida", success_log_text = "História atualizada na linha", sheet = sheet
+        updateField(
+                      parameterMatch = lifeStoryMatch, message = message, listValidOptions = [], rowNumber = i, columnNumber = colNumDict["lifeStory"],
+                      errorLogText = "História inválida", successLogText = "História atualizada na linha", sheet = sheet
                       )
       }
 
       if (familyMatch) {
-        update_field(
-                      parameterMatch = familyMatch, message = message, list_valid_options = [], row_number = i, column_number = col_num_dict["family"],
-                      error_log_text = "Família inválida", success_log_text = "Família atualizada na linha", sheet = sheet
+        updateField(
+                      parameterMatch = familyMatch, message = message, listValidOptions = [], rowNumber = i, columnNumber = colNumDict["family"],
+                      errorLogText = "Família inválida", successLogText = "Família atualizada na linha", sheet = sheet
                       )
       }
-    
+
+      if (notesMatch) {
+        updateField(
+                      parameterMatch = notesMatch, message = message, listValidOptions = [], rowNumber = i, columnNumber = colNumDict["notes"],
+                      errorLogText = "Observação inválida", successLogText = "Observação atualizada na linha", sheet = sheet
+                      )
+      }
+      if (microchipMatch) {
+        updateField(
+                      parameterMatch = microchipMatch, message = message, listValidOptions = [], rowNumber = i, columnNumber = colNumDict["microchip"],
+                      errorLogText = "Microchip inválido", successLogText = "Microchip atualizado na linha", sheet = sheet
+                      )
+      }
+      if (interactionAnimalsMatch) {
+        updateField(
+                      parameterMatch = interactionAnimalsMatch, message = message, listValidOptions = validBoolList, rowNumber = i, columnNumber = colNumDict["interactionAnimals"],
+                      errorLogText = "Interações com outros Animais inválido", successLogText = "Interações com outros Animais atualizado na linha", sheet = sheet
+                      )
+      }
+
+      if (interactionHumansMatch) {
+        updateField(
+                      parameterMatch = interactionHumansMatch, message = message, listValidOptions = validBoolList, rowNumber = i, columnNumber = colNumDict["interactionHumans"],
+                      errorLogText = "Interação com Humanos inválido", successLogText = "Interação com Humanos atualizado na linha", sheet = sheet
+                      )
+      }
+      if (profileMatch) {
+        updateField(
+                      parameterMatch = profileMatch, message = message, listValidOptions = validProfileList, rowNumber = i, columnNumber = colNumDict["profile"],
+                      errorLogText = "Perfil inválido", successLogText = "Perfil atualizado na linha", sheet = sheet
+                      )
+      }
 
       logToSheet('Atualização concluída', message, false);
       return;
@@ -353,9 +396,9 @@ function processMessage(message) {
 }
 
 
-function update_field(
-                    parameterMatch, message, list_valid_options = [], row_number, column_number, error_log_text = "Erro", success_log_text = "Sucesso",
-                    sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(main_worksheet)
+function updateField(
+                    parameterMatch, message, listValidOptions = [], rowNumber, columnNumber, errorLogText = "Erro", successLogText = "Sucesso",
+                    sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(mainWorksheet)
                     ){
   var parameter = parameterMatch[1].trim();
   // Capitalize the first letter of the color
@@ -366,14 +409,14 @@ function update_field(
   }
 
   // Validate parameter
-  if (list_valid_options.length > 0 && !list_valid_options.includes(parameter)){
-    logToSheet(error_log_text + ": " + parameter, message, true);
-    Logger.log(error_log_text + ": " + parameter + ": " + message);
+  if (listValidOptions.length > 0 && !listValidOptions.includes(parameter)){
+    logToSheet(errorLogText + ": " + parameter, message, true);
+    Logger.log(errorLogText + ": " + parameter + ": " + message);
     return;
   }
-  sheet.getRange(row_number + 1, column_number).setValue(parameter);
-  logToSheet(success_log_text + " " + (row_number + 1), message, false);
-  Logger.log(success_log_text + " " + (row_number + 1) + ": " + message);
+  sheet.getRange(rowNumber + 1, columnNumber).setValue(parameter);
+  logToSheet(successLogText + " " + (rowNumber + 1), message, false);
+  Logger.log(successLogText + " " + (rowNumber + 1) + ": " + message);
 }
 
 
