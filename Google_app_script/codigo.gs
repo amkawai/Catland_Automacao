@@ -47,22 +47,48 @@ var validColors = ["Amarelo e Branco", "Amarelo", "Bege e Branco", "Bege e Cinza
                             "Siberiano", "Tigrado e Branco", "Tigrado e Cinza", "Tigrado e Tricolor", "Tigrado", "Tricolor e Tigrado", "Tricolor",
                             "Pendente", "N/A"];
 var valid_bool_list = ["Sim", "Não", "Pendente", "N/A"];
-
+var valid_fiv_felv_list =["Positivo", "Negativo", "Pendente", "N/A"];
+var valid_vaccine_list = ["V3", "V4", "V5", "Pendente", "N/A"];
+var valid_profile_list = ["Arisco","Assustado", "Brincalhão", "Carinhoso", "Dócil", "Dorminhoco", "Neutro", "Temperamental", "Tímido",
+                        "Tranquilo", "Pendente","N/A"];
+var valid_returned_list = ["Sim", "Não", "N/A"];
 
 var col_num_dict ={
                     "location": 1,
                     "status": 2,
+                    "azure_code": 3,            // deprecated
                     "code": 4,
                     "name": 5,
                     "entry NGO": 6,
                     "exit NGO": 7,
+                    "time_span_at_NGO": 8,      // not used in any formula, this is calculated directly on the spreadsheet
                     "vaccination_card": 9,
                     "birthdate": 10,
-                    
+                    "age": 11,                  // not used in any formula, this is calculated directly on the spreadsheet
                     "sex": 12,
                     "race": 13,
                     "color": 14,
-                    
+                    "neuter_date": 15,
+                    "fiv": 16,
+                    "felv": 17,
+                    "fiv_felv_test_date": 18,
+                    "vaccine_2nd_dose_date": 19,
+                    "vaccinationType": 20,
+                    "vaccine_renewal_status": 21,
+                    "rabies_date": 22,
+                    "rabies_renewal_status": 23,
+                    "life_story": 24,
+                    "family": 25,
+                    "notes": 26,
+                    "microchip": 27,
+                    "interaction_animals": 28,
+                    "interaction_humans": 29,
+                    "profile": 30,
+                    "returned_status": 31,
+                    "returned_date": 32,
+                    "returned_reason": 33,
+                    "health_notes": 34,
+                    "admin_notes": 35
 }
 
 // Global array to store messages
@@ -165,7 +191,7 @@ function processMessages() {
  */
 function processMessage(message) {
   // Define a common positive lookahead assertion for properties
-  var lookahead = '(?=\\sRaça|\\sCor|\\sGênero|\\sNovo\\sNome|\\sCód\\.\\sSimplesvet|\\sStatus|\\sLocal|\\sCarteirinha\\sde\\sVacinação|\\s\\w+:|$)';
+  var lookahead = '(?=\\sLocal|\\sStatus|\\sCód\\.\\sSimplesvet|\\sNome|\\sNovo\\sNome|\\sEntrada\\sONG|\\sSaída\\sONG|\\sCarteirinha\\sde\\sVacinação|\\sData nasc\\.|\\sGênero|\\sRaça|\\sCor|\\sCastração|\\sFIV|\\sFELV|\\sData\\sTeste\\sFIV\\se\\sFELV|\\sData\\s2ª\\sDose\\sVacina|\\sTipo\\sde\\sVacina|\\sRenovação\\sVacina|\\sRenovação\\s\\sVacina|\\sRaiva|\\sRenovação\\sRaiva|\\sHistória|\\sFamília|\\sObservação|\\sMicrochip|\\sInterações\\scom\\soutros\\sanimais|\\sInteração\\scom\\sHumanos|\\sPerfil|\\sDevolvido|\\sData\\sda\\sDevolução|\\sMotivo\\sda\\sDevolução|\\sObs\\.\\sSaúde|\\sObs\\.\\sAdministrativo|\\s\\w+:|$)';
   
   // Define property patterns with the common positive lookahead assertion
   var nomePattern = new RegExp('Nome:\\s*([^]+?)(?=\\s(?:Novo\\sNome:|Local:|Raça:|Cor:|Cód\\.\\sSimplesvet:|Sexo?:|Status:|$))');
@@ -177,21 +203,23 @@ function processMessage(message) {
   var sexPattern = new RegExp('Gênero:\\s*(' + validSexes.join('|') + ')');
   var vaccinationPattern = new RegExp('Carteirinha de Vacinação:\\s*(' + valid_bool_list.join('|') + ')');
   var novoNomePattern = new RegExp('Novo nome:\\s*([^]+?)' + lookahead);
+  var fivPattern = new RegExp('FIV:\\s*(' + valid_fiv_felv_list.join('|') + ')');
+  var felvPattern = new RegExp('FELV:\\s*(' + valid_fiv_felv_list.join('|') + ')');
+  var vaccineTypePattern = new RegExp('Tipo de Vacina:\\s*(' + valid_vaccine_list.join('|') + ')');
 
   
   var nomeMatch = message.match(nomePattern);
-  Logger.log(nomeMatch);
   var codigoMatch = message.match(codigoPattern);
-  Logger.log(codigoMatch);
   var locationMatch = message.match(locationPattern);
   var sexMatch = message.match(sexPattern);
   var raceMatch = message.match(racePattern);
   var colorMatch = message.match(colorPattern);
   var statusMatch = message.match(statusPattern);
   var vaccinationMatch = message.match(vaccinationPattern);
-  Logger.log(vaccinationMatch);
   var novoNomeMatch = message.match(novoNomePattern);
-  Logger.log(novoNomeMatch);
+  var fivMatch = message.match(fivPattern);
+  var felvMatch = message.match(felvPattern);
+  var vaccineTypeMatch = message.match(vaccineTypePattern);
   
   if (!nomeMatch || !codigoMatch) {
     logToSheet('Nome e/ou Cód Simplesvet não encontrados: nome: ' + nomeMatch[1] + ", codigo: " + codigoMatch[1], message, true);
@@ -274,6 +302,28 @@ function processMessage(message) {
                       error_log_text = "Novo nome inválido", success_log_text = "Nome atualizado na linha", sheet = sheet
                       )
       }
+
+      if (fivMatch) {
+        update_field(
+                      parameterMatch = fivMatch, message = message, list_valid_options = valid_fiv_felv_list, row_number = i, column_number = col_num_dict["fiv"],
+                      error_log_text = "FIV inválido", success_log_text = "FIV atualizado na linha", sheet = sheet
+                      )
+      }
+
+      if (felvMatch) {
+        update_field(
+                      parameterMatch = felvMatch, message = message, list_valid_options = valid_fiv_felv_list, row_number = i, column_number = col_num_dict["felv"],
+                      error_log_text = "FELV inválido", success_log_text = "FELV atualizado na linha", sheet = sheet
+                      )
+      }
+
+      if (vaccineTypeMatch) {
+        update_field(
+                      parameterMatch = vaccineTypeMatch, message = message, list_valid_options = valid_vaccine_list, row_number = i, column_number = col_num_dict["vaccinationType"],
+                      error_log_text = "Tipo de Vacina inválido", success_log_text = "Tipo de Vacina atualizado na linha", sheet = sheet
+                      )
+      }
+    
 
       logToSheet('Atualização concluída', message, false);
       return;
