@@ -77,7 +77,7 @@ var col_num_dict ={
                     "vaccine_renewal_status": 21,
                     "rabies_date": 22,
                     "rabies_renewal_status": 23,
-                    "life_story": 24,
+                    "lifeStory": 24,
                     "family": 25,
                     "notes": 26,
                     "microchip": 27,
@@ -194,7 +194,8 @@ function processMessage(message) {
   var lookahead = '(?=\\sLocal|\\sStatus|\\sCód\\.\\sSimplesvet|\\sNome|\\sNovo\\sNome|\\sEntrada\\sONG|\\sSaída\\sONG|\\sCarteirinha\\sde\\sVacinação|\\sData nasc\\.|\\sGênero|\\sRaça|\\sCor|\\sCastração|\\sFIV|\\sFELV|\\sData\\sTeste\\sFIV\\se\\sFELV|\\sData\\s2ª\\sDose\\sVacina|\\sTipo\\sde\\sVacina|\\sRenovação\\sVacina|\\sRenovação\\s\\sVacina|\\sRaiva|\\sRenovação\\sRaiva|\\sHistória|\\sFamília|\\sObservação|\\sMicrochip|\\sInterações\\scom\\soutros\\sanimais|\\sInteração\\scom\\sHumanos|\\sPerfil|\\sDevolvido|\\sData\\sda\\sDevolução|\\sMotivo\\sda\\sDevolução|\\sObs\\.\\sSaúde|\\sObs\\.\\sAdministrativo|\\s\\w+:|$)';
   
   // Define property patterns with the common positive lookahead assertion
-  var nomePattern = new RegExp('Nome:\\s*([^]+?)(?=\\s(?:Novo\\sNome:|Local:|Raça:|Cor:|Cód\\.\\sSimplesvet:|Sexo?:|Status:|$))');
+  //var nomePattern = new RegExp('Nome:\\s*([^]+?)(?=\\s(?:Novo\\sNome:|Local:|Raça:|Cor:|Cód\\.\\sSimplesvet:|Sexo?:|Status:|$))');
+  var nomePattern = new RegExp('Nome:\\s*([^]+?)' + lookahead);
   var codigoPattern = new RegExp('Cód\\. Simplesvet:\\s*(\\d+)' + lookahead);
   var statusPattern = new RegExp('Status:\\s*(' + validStatuses.join('|') + ')');
   var locationPattern = new RegExp('Local:\\s*(' + validLocations.join('|') + ')');
@@ -206,6 +207,8 @@ function processMessage(message) {
   var fivPattern = new RegExp('FIV:\\s*(' + valid_fiv_felv_list.join('|') + ')');
   var felvPattern = new RegExp('FELV:\\s*(' + valid_fiv_felv_list.join('|') + ')');
   var vaccineTypePattern = new RegExp('Tipo de Vacina:\\s*(' + valid_vaccine_list.join('|') + ')');
+  var lifeStoryPattern = new RegExp('História:\\s*([^]+?)' + lookahead);
+  var familyPattern = new RegExp('Família:\\s*([^]+?)' + lookahead);
 
   
   var nomeMatch = message.match(nomePattern);
@@ -220,6 +223,8 @@ function processMessage(message) {
   var fivMatch = message.match(fivPattern);
   var felvMatch = message.match(felvPattern);
   var vaccineTypeMatch = message.match(vaccineTypePattern);
+  var lifeStoryMatch = message.match(lifeStoryPattern);
+  var familyMatch = message.match(familyPattern);
   
   if (!nomeMatch || !codigoMatch) {
     logToSheet('Nome e/ou Cód Simplesvet não encontrados: nome: ' + nomeMatch[1] + ", codigo: " + codigoMatch[1], message, true);
@@ -321,6 +326,20 @@ function processMessage(message) {
         update_field(
                       parameterMatch = vaccineTypeMatch, message = message, list_valid_options = valid_vaccine_list, row_number = i, column_number = col_num_dict["vaccinationType"],
                       error_log_text = "Tipo de Vacina inválido", success_log_text = "Tipo de Vacina atualizado na linha", sheet = sheet
+                      )
+      }
+
+      if (lifeStoryMatch) {
+        update_field(
+                      parameterMatch = lifeStoryMatch, message = message, list_valid_options = [], row_number = i, column_number = col_num_dict["lifeStory"],
+                      error_log_text = "História inválida", success_log_text = "História atualizada na linha", sheet = sheet
+                      )
+      }
+
+      if (familyMatch) {
+        update_field(
+                      parameterMatch = familyMatch, message = message, list_valid_options = [], row_number = i, column_number = col_num_dict["family"],
+                      error_log_text = "Família inválida", success_log_text = "Família atualizada na linha", sheet = sheet
                       )
       }
     
