@@ -15,7 +15,7 @@ Automação criada para simplificar atualização de dados de gatos da ONG Catla
 
 ## Utilização
 
-Uma vez o projeto esteja apropriadamente configurado, esta automação funciona com os seguintes passos:
+Uma vez que o projeto esteja apropriadamente configurado, esta automação funciona com os seguintes passos:
 
 - No computador, ir até o Whatsapp Web, grupo Catland Back Office
     - Aplicativo Whatsapp não foi testado
